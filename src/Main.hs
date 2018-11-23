@@ -5,12 +5,14 @@ import System.IO
 showLength :: String -> String
 showLength str = show (length str)
 
+data Op = Add
+        | Subtract
+    deriving (Show, Eq)
+
 data Token = TokenOp Op
            | TokenNum Int
            | TokenEnd
     deriving (Show, Eq)
-
-data Op = Add | Subtract deriving (Show, Eq)
 
 op :: String -> Op
 op str
@@ -18,11 +20,17 @@ op str
     | str == "\t\t" = Subtract
     | otherwise     = error "<Other Op>"
 
+accumulateTabs :: String -> String -> [Token]
+accumulateTabs acc [] = [TokenOp (op acc)]
+accumulateTabs acc (x:xs)
+    | [x] == " " = accumulateTabs (acc ++ [x]) xs
+    | otherwise = TokenOp (op acc) : tokenize (x:xs)
+
 accumulateSpaces :: String -> String -> [Token]
 accumulateSpaces acc [] = [(number acc)]
 accumulateSpaces acc (x:xs)
     | [x] == " " = accumulateSpaces (acc ++ [x]) xs
-    | otherwise = number acc : tokenize xs
+    | otherwise = number acc : tokenize (x:xs)
 
 number :: String -> Token
 number str = TokenNum (length str)
@@ -34,10 +42,10 @@ tokenize (x:xs)
     | [x] == " " = accumulateSpaces [x] xs
     | otherwise = error "Other"
 
+--
+
 loop :: IO ()
 loop = do
-    putStr "Enter string: "
-    hFlush stdout
     line <- getLine
     if (length line) == 0 then
         return ()
@@ -45,7 +53,7 @@ loop = do
         let
             token = tokenize (line :: String)
         in do
-            (print . show) token
+            print token
             main
 
 
