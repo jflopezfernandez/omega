@@ -1,0 +1,17 @@
+
+digraph {
+    label       = "Finite State Machine Representation" ;
+    labelloc    = "true"                                ;
+
+    Start                   [label = "Start"]           ;
+
+    Identifier              [shape = "doublecircle"]    ;
+    Operator                [shape = "doublecircle"]    ;
+    Integer                 [shape = "doublecircle"]    ;
+
+    Start -> Identifier     [label = "\\t"]             ;
+    Start -> Operator       [label = "\\t"]             ;
+    Start -> Integer        [label = "<space>"]         ;
+
+    Integer -> Integer      [label = "<space>"]         ;
+}

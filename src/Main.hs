@@ -110,7 +110,7 @@ parse tokens =
             tree
         else
             error $ "Leftover tokens: " ++ show tokens'
-
+        
 loop :: IO ()
 loop = do
     line <- getLine
